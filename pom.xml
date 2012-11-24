@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.thingtrack</groupId>
+  <artifactId>db4o.web</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1.SNAPSHOT</version>
+  <name>Db4o Web Application</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <vaadin.version>6.7.1</vaadin.version>
+    <gwt.version>2.3.0</gwt.version>
+    <gwt.plugin.version>2.2.0</gwt.plugin.version>
+    <slf4j.version>1.5.0</slf4j.version>
+  </properties>
+	
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+
+	  <!-- OSGi Plugin -->
+	  <plugin>
+				<groupId>com.springsource.bundlor</groupId>
+				<artifactId>com.springsource.bundlor.maven</artifactId>
+				<version>1.0.0.M2</version>
+				<configuration>
+					<outputManifest>${basedir}/src/main/webapp/META-INF/MANIFEST.MF</outputManifest>
+					<failOnWarnings>false</failOnWarnings>
+					<removeNullHeaders>true</removeNullHeaders>
+					<manifestHeaders><![CDATA[Bundle-ManifestVersion: 2
+Bundle-Description: Db4o Web Application
+Bundle-Name: Db4o Web Application
+Bundle-SymbolicName: ${groupId}.${artifactId}
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Version: ${version}
+Import-Package: org.eclipse.virgo.web.dm, 
+ com.vaadin.terminal.gwt.server,
+ com.vaadin.terminal.gwt.client.ui.dd,
+ com.vaadin.terminal, 
+ com.vaadin.tools,
+ com.vaadin.event, 
+ com.vaadin.event.dd, 
+ com.vaadin.event.dd.acceptcriteria,
+ com.vaadin.data,
+ com.vaadin.data.util,
+ com.vaadin.data.validator,
+ com.vaadin.ui,
+ com.vaadin.annotations,  
+ org.aspectj.lang,
+ org.aspectj.lang.annotation,
+ org.aspectj.runtime.reflect,
+ org.slf4j;version="[1.6.1,2)",
+ org.slf4j.helpers;version="[1.6.1,2)",
+ org.slf4j.spi;version="[1.6.1,2)",
+ org.slf4j.impl;version="[1.6.1,2)",
+ org.apache.log4j,
+ com.db4o.query,
+ com.db4o.osgi,
+ com.db4o.reflect.generic,
+ com.db4o.ext,
+ com.db4o.events,
+ com.db4o.foundation,
+ com.db4o.internal
+Web-ContextPath: db4o.web
+Bundle-Classpath: WEB-INF/classes
+]]></manifestHeaders>
+				</configuration>
+				<!-- generate the manifest automatically during packaging -->
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>package</phase>
+						<goals>
+							<goal>manifest</goal>
+							<goal>transform</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
+      <!--
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>${gwt.plugin.version}</version>
+        <configuration>
+          <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
+          <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+          <runTarget>db4o.web</runTarget>
+          <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+          <noServer>true</noServer>
+          <port>8080</port>
+          <compileReport>false</compileReport>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resources</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-maven-plugin</artifactId>
+        <version>1.0.2</version>
+        <executions>
+          <execution>
+            <configuration>
+            </configuration>
+            <goals>
+              <goal>update-widgetset</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin> 
+      -->
+    </plugins>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>vaadin-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>vaadin-addons</id>
+      <url>http://maven.vaadin.com/vaadin-addons</url>
+    </repository>
+		<repository>
+			<id>i21-s3-osgi-repo</id>
+			<name>i21 osgi artifacts repo</name>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>http://maven.springframework.org/osgi</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.bundles.milestone</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Milestone Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/milestone</url>
+		</repository>
+
+
+		<repository>
+			<id>spring-release</id>
+			<name>Spring Portfolio Release Repository</name>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+
+		<repository>
+			<id>eclipse-repository</id>
+			<name>Eclipse Repository</name>
+			<url>http://repo1.maven.org/eclipse/</url>
+		</repository>
+
+		<repository>
+			<id>spring-ext</id>
+			<name>Spring External Dependencies Repository</name>
+			<url>
+                https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-ext/
+            </url>
+		</repository>    
+  </repositories>
+  
+  <pluginRepositories>
+    <pluginRepository>
+      <id>codehaus-snapshots</id>
+      <url>http://nexus.codehaus.org/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+    <pluginRepository>
+      <id>vaadin-snapshots</id>
+      <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+		<!-- Spring Plugin Repositories -->
+		<pluginRepository>
+			<id>maven-repo</id>
+			<name>maven repo</name>
+			<url>http://repo1.maven.org/maven2/</url>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>com.springsource.repository.bundles.milestone</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Milestone Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/milestone</url>
+		</pluginRepository>    
+  </pluginRepositories>
+
+  <dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>com.springsource.slf4j.org.apache.commons.logging</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>com.springsource.slf4j.api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>com.springsource.slf4j.log4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.log4j</groupId>
+					<artifactId>com.springsource.org.apache.log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.osgi</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.7.0.v20110613</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.osgi</groupId>
+			<artifactId>spring-osgi-core</artifactId>
+			<version>1.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+        <dependency>
+        	<groupId>org.eclipse.persistence</groupId>
+        	<artifactId>javax.persistence</artifactId>
+        	<version>2.0.0</version>
+        	<scope>provided</scope>
+        </dependency>
+    
+        <dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>org.springframework.web</artifactId>
+    		<version>3.0.5.RELEASE</version>
+    		<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+    		<groupId>javax.servlet</groupId>
+    		<artifactId>com.springsource.javax.servlet</artifactId>
+    		<version>2.5.0</version>
+    		<scope>provided</scope>
+		</dependency>
+
+    	<dependency>
+      		<groupId>com.vaadin</groupId>
+      		<artifactId>vaadin</artifactId>
+      		<version>${vaadin.version}</version>
+      		<scope>provided</scope>
+    	</dependency>
+    
+		<!-- Vaadin Addon Component Dependencies -->		
+		<dependency>
+			<groupId>com.thingtrack</groupId>
+			<artifactId>com.vaadin.addons.osgi</artifactId>
+			<version>0.0.1.SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		    
+		<dependency>
+			<groupId>org.dellroad</groupId>
+			<artifactId>dellroad-stuff-vaadin</artifactId>
+			<version>1.0.284</version>
+			<scope>provided</scope>
+		</dependency>
+		  
+		<dependency>
+      		<groupId>com.db4o</groupId>
+      		<artifactId>db4o-full-java5</artifactId>
+      		<version>8.0.249.16098</version>
+      		<scope>provided</scope>
+		</dependency>
+		    	
+        <dependency>
+      		<groupId>com.db4o</groupId>
+      		<artifactId>db4o-osgi</artifactId>
+      		<version>8.0.249.16098</version>
+      		<scope>provided</scope>
+    	</dependency>
+    	
+		<dependency>
+		   <groupId>org.vaadin.addons</groupId>
+		   <artifactId>formbinder</artifactId>
+		   <version>2.1.2</version>
+		   <scope>provided</scope>
+		</dependency>
+		
+    	<dependency>
+    		<groupId>com.thingtrack</groupId>
+    		<artifactId>db4o.server</artifactId>
+    		<version>0.0.1.SNAPSHOT</version>
+    		<scope>provided</scope>
+    	</dependency>
+    	
+    	<dependency>
+    		<groupId>com.thingtrack</groupId>
+    		<artifactId>db4o.domain</artifactId>
+    		<version>0.0.1.SNAPSHOT</version>
+    		<scope>provided</scope>
+    	</dependency>
+            
+    	<!--
+    	<dependency>
+	      	<groupId>com.google.gwt</groupId>
+	      	<artifactId>gwt-user</artifactId>
+	      	<version>${gwt.version}</version>
+	      	<scope>provided</scope>
+    	</dependency>
+    	<dependency>
+      		<groupId>javax.validation</groupId>
+      		<artifactId>validation-api</artifactId>
+      		<version>1.0.0.GA</version>
+      		<scope>provided</scope>
+    	</dependency>
+    	<dependency>
+      		<groupId>javax.validation</groupId>
+      		<artifactId>validation-api</artifactId>
+      		<version>1.0.0.GA</version>
+      		<classifier>sources</classifier>
+      		<scope>provided</scope>
+		</dependency>
+    	-->    
+  </dependencies>
+
+</project>
